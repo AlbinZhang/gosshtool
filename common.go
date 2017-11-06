@@ -4,6 +4,7 @@ import (
 	"golang.org/x/crypto/ssh"
 	"io"
 	"log"
+	"net"
 )
 
 type PtyInfo struct {
