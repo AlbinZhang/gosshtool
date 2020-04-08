@@ -30,7 +30,7 @@ type SSHClientConfig struct {
 
 func makeConfig(user string, password string, privateKey string) (config *ssh.ClientConfig) {
 
-	if password == "" && user == "" {
+	if password == "" && privateKey == "" {
 		log.Fatal("No password or private key available")
 	}
 	config = &ssh.ClientConfig{
@@ -38,9 +38,7 @@ func makeConfig(user string, password string, privateKey string) (config *ssh.Cl
 		Auth: []ssh.AuthMethod{
 			ssh.Password(password),
 		},
-		HostKeyCallback: func(hostname string, remote net.Addr, key ssh.PublicKey) error {
-			return nil
-		},
+		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
 	}
 	if privateKey != "" {
 		signer, err := ssh.ParsePrivateKey([]byte(privateKey))
@@ -53,6 +51,7 @@ func makeConfig(user string, password string, privateKey string) (config *ssh.Cl
 			Auth: []ssh.AuthMethod{
 				clientkey,
 			},
+			HostKeyCallback: ssh.InsecureIgnoreHostKey(),
 		}
 	}
 	return
